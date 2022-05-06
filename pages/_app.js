@@ -5,20 +5,20 @@ import Link from 'next/link';
 function MyApp({ Component, pageProps }) {
   return (
     <div>
-      <nav className='border-b p-6'>
-        <p className='text-4xl font-bold'>NFT Marketplace</p>
-        <div className='flex mt-4'>
+      <nav>
+        <h1>NFT Marketplace</h1>
+        <div>
           <Link href='/'>
-            <a className='mr-4 text-pink-500'>Home</a>
+          <a className="font-bold px-3 py-2 text-slate-700 rounded-lg hover:bg-slate-100 hover:text-slate-900">Home</a>
           </Link>
           <Link href='/create-nft'>
-            <a className='mr-6 text-pink-500'>Sell NFT</a>
+            <a>Sell NFT</a>
           </Link>
           <Link href='/my-nfts'>
-            <a className='mr-6 text-pink-500'>My NFTs</a>
+            <a>My NFTs</a>
           </Link>
           <Link href='/dashboard'>
-            <a className='mr-6 text-pink-500'>Dashboard</a>
+            <a>Dashboard</a>
           </Link>
         </div>
       </nav>
