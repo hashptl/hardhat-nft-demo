@@ -1,38 +1,55 @@
-// We require the Hardhat Runtime Environment explicitly here. This is optional
-// but useful for running the script in a standalone fashion through `node <script>`.
-//
-// When running the script with `npx hardhat run <script>` you'll find the Hardhat
-// Runtime Environment's members available in the global scope.
-const hre = require('hardhat');
-const fs = require('fs');
+/* test/sample-test.js */
+describe('NFTMarket', function () {
+  it('Should create and execute market sales', async function () {
+    /* deploy the marketplace */
+    const NFTMarketplace = await ethers.getContractFactory('NFTMarketplace');
+    const nftMarketplace = await NFTMarketplace.deploy();
+    await nftMarketplace.deployed();
 
-async function main() {
-  // Hardhat always runs the compile task when running scripts with its command
-  // line interface.
-  //
-  // If this script is run directly using `node` you may want to call compile
-  // manually to make sure everything is compiled
-  // await hre.run('compile');
+    let listingPrice = await nftMarketplace.getListingPrice();
+    listingPrice = listingPrice.toString();
 
-  // We get the contract to deploy
-  const NFTMarketplace = await hre.ethers.getContractFactory('NFTMarketplace');
-  const nftMarketplace = await NFTMarketplace.deploy();
-  await nftMarketplace.deployed();
-  console.log('nftMarketplace deployed to:', nftMarketplace.address);
+    const auctionPrice = ethers.utils.parseUnits('1', 'ether');
 
-  fs.writeFileSync(
-    './config.js',
-    `
-  export const marketplaceAddress = "${nftMarketplace.address}"
-  `
-  );
-}
+    /* create two tokens */
+    await nftMarketplace.createToken(
+      'https://www.mytokenlocation.com',
+      auctionPrice,
+      { value: listingPrice }
+    );
+    await nftMarketplace.createToken(
+      'https://www.mytokenlocation2.com',
+      auctionPrice,
+      { value: listingPrice }
+    );
 
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
-main()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error(error);
-    process.exit(1);
+    const [_, buyerAddress] = await ethers.getSigners();
+
+    /* execute sale of token to another user */
+    await nftMarketplace
+      .connect(buyerAddress)
+      .createMarketSale(1, { value: auctionPrice });
+
+    /* resell a token */
+    await nftMarketplace
+      .connect(buyerAddress)
+      .resellToken(1, auctionPrice, { value: listingPrice });
+
+    /* query for and return the unsold items */
+    items = await nftMarketplace.fetchMarketItems();
+    items = await Promise.all(
+      items.map(async (i) => {
+        const tokenUri = await nftMarketplace.tokenURI(i.tokenId);
+        let item = {
+          price: i.price.toString(),
+          tokenId: i.tokenId.toString(),
+          seller: i.seller,
+          owner: i.owner,
+          tokenUri,
+        };
+        return item;
+      })
+    );
+    console.log('items: ', items);
   });
+});
