@@ -15,12 +15,12 @@ module.exports = {
       chainId: 1337,
     },
     mumbai: {
-      url: 'https://polygon-mumbai.infura.io/v3/ccb043108c1f408aba7d179446c65c7b',
-      accounts: [`a37d9b8daa93f3c557317232de6bec876af952eb72c2a07e58c26fc110c9292d`],
+      url: 'https://polygon-mumbai.infura.io/v3/2a9d72a3b96f4e37877973751b2e82f5',
+      accounts: [`ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80`],
     },
     mainnet: {
-      url: 'https://mainnet.infura.io/v3/ccb043108c1f408aba7d179446c65c7b',
-      accounts: [`a37d9b8daa93f3c557317232de6bec876af952eb72c2a07e58c26fc110c9292d`],
+      url: 'https://polygon-mainnet.infura.io/v3/2a9d72a3b96f4e37877973751b2e82f5',
+      accounts: [`ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80`],
     },
   },
   solidity: '0.8.4',
